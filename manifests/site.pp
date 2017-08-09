@@ -60,8 +60,8 @@ define ds_389::site (
   $certutil           = '/usr/bin/certutil'
   $ldapmodify         = '/usr/bin/ldapmodify'
   $id                 = "${server_identifier}:"
-  $prefix = "${server_identifier}_${::hostname}"
-  
+  $prefix = "${name}_${::hostname}"
+
   if ( $modify_ldif_file != 'none' ){
     $munge_modify_ldif  = inline_template("<%= @modify_ldif_file.collect{|x| prefix.to_s+':'+x.to_s+','} %>")
     $array_modify_ldif  = split( $munge_modify_ldif, '[,]')
@@ -76,7 +76,7 @@ define ds_389::site (
       tag               => "${::env}_${::hostname}_ldif_modify"
     }
   }
-  
+
   if ( $add_ldif_file != 'none' ){
     $munge_add_ldif     = inline_template("<%= @add_ldif_file.collect{|x| prefix.to_s+':'+x.to_s+','} %>")
     $array_add_ldif     = split( $munge_add_ldif, '[,]')
@@ -92,7 +92,7 @@ define ds_389::site (
       tag               => "${::env}_${::hostname}_ldif_add"
     }
   }
-  
+
   if ( $schema_extension != 'none' ) {
     $munge_schema       = inline_template("<%= @schema_extension.collect{|x| prefix.to_s+':'+x.to_s+','} %>")
     $array_schema       = split( $munge_schema, '[,]')
@@ -135,8 +135,8 @@ define ds_389::site (
   unless $root_dn_pwd {
     fail ("Directory Service 389 : rootDNPwd : No Password for RootDN :::${root_dn_pwd}:::")
   }
-  
-  
+
+
   anchor {"${server_identifier} ds_389::site::start" : }->
   exec { "${server_identifier} SELinux disable" :
     command => '/bin/echo 0 > /selinux/enforce',
@@ -207,7 +207,7 @@ define ds_389::site (
     command => "/bin/rm -f ${pwd_file} ${noise_file}",
   }->
   anchor { "${server_identifier} ds_389::site::end" :}
-  
+
   ds_389::schema_extension_load { $array_schema :
     server_identifier => $server_identifier,
     require           => Anchor["${server_identifier} ds_389::site::end"],
