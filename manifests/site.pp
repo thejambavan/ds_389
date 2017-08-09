@@ -36,20 +36,20 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 define ds_389::site (
-  $suite_spot_group      = $suite_spot_group,
-  $suite_spot_user_id    = $suite_spot_user_id ,
-  $modify_ldif_file      = pick($modify_ldif_file, 'none'),
-  $add_ldif_file         = pick($add_ldif_file, 'none'),
-  $schema_extension      = pick($schema_extension, 'none'),
-  $base_data             = pick ($base_data, false),
-  $root_dn               = $root_dn,
-  $root_dn_pwd           = $root_dn_pwd,
+  $suite_spot_group      = 'nobody',
+  $suite_spot_user_id    = 'nobody',
+  $modify_ldif_file      = 'none',
+  $add_ldif_file         = 'none',
+  $schema_extension      = 'none',
+  $base_data             = false,
+  $root_dn               = 'cn=Directory Manager',
+  $root_dn_pwd           = 'InsecurePassword123',
   $server_identifier     = $name,
-  $server_port           = $server_port,
-  $server_ssl_port       = $server_ssl_port,
-  $suffix                = $suffix,
+  $server_port           = '389',
+  $server_ssl_port       = '636',
+  $suffix                = 'dc=example,dc=com',
   $service               = 'dirsrv',
-  $nsEncryptionAlgorithm = pick($nsEncryptionAlgorithm ,'AES')
+  $nsEncryptionAlgorithm = 'AES',
 ){
   include ds_389::base_load_list
   include ds_389::service
